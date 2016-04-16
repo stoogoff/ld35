@@ -2,16 +2,16 @@
 define(function(require) {
 	var constants = require("../utils/constants");
 	var helpers = require("../utils/helpers");
-	var Block = require("./block");
+	var Block = require("./block2");
 	var Animation = require("./animation");
 	var Link = require("./link");
 
 	function addOrRemoveBlock(active, block) {
-		if(block.isActive()) {
-			active.push(block.__key);
+		if(block.active) {
+			active.push(block.key);
 		}
-		else if(active.indexOf(block.__key) !== -1) {
-			active.splice(active.indexOf(block.__key), 1);
+		else if(active.indexOf(block.key) !== -1) {
+			active.splice(active.indexOf(block.key), 1);
 		}		
 	}
 
@@ -21,11 +21,10 @@ define(function(require) {
 		this.level = null;
 		this.tile = 0;
 		this.blocks = {};
-		this.animations = [];
-		this.links = [];
+		this.animation = null;
 	};
 
-	Grid.prototype.render = function(level) {
+	Grid.prototype.create = function(level) {
 		this.level = level;
 		this.tile = parseInt(constants.PLAY_AREA_SIZE / this.level.size, 10) - constants.PAD;
 
@@ -38,7 +37,8 @@ define(function(require) {
 			for(var x = 0; x < this.level.size; ++x) {
 				var key = helpers.guid();
 
-				this.blocks[key] = new Block(key, this.game, currentX, currentY, this.tile, this.tile, this.level.grid[colour++], this.colours);
+				this.blocks[key] = new Block(key, this.level.grid[colour++]);
+				this.blocks[key].addArea(currentX, currentY, this.tile, this.tile);
 
 				currentX += this.tile + constants.PAD;
 			}
@@ -47,27 +47,33 @@ define(function(require) {
 		}
 	};
 
-	Grid.prototype.activate = function(x, y) {
+	Grid.prototype.activeBlocks = function() {
 		var active = [];
 
-		// check for existing active first to prevent more than the max being clicked
 		for(var key in this.blocks) {
-			addOrRemoveBlock(active, this.blocks[key]);
+			if(this.blocks[key].active) {
+				active.push(key);
+			}
 		}
 
+		return active;
+	}
+
+	Grid.prototype.activate = function(x, y) {
+		var active = this.activeBlocks();
+
 		// TODO warn the user by flashing or something if they can't select another thing
-console.log("active.length = " + active.length)
+
 		// activate or deactivate
 		for(var key in this.blocks) {
 			var block = this.blocks[key];
 
 			if(block.contains(x, y)) {
-				console.log("HIT: " + key)
 				if(active.length < constants.MAX_ACTIVE) {
-					block.toggleActive();
+					block.active = !block.active;
 				}
 				else {
-					block.setActive(false);
+					block.active = false;
 				}
 				
 				addOrRemoveBlock(active, block);
@@ -75,88 +81,50 @@ console.log("active.length = " + active.length)
 		}
 
 		if(active.length == constants.MAX_ACTIVE) {
-			if(this.blocks[active[0]].adjacent(this.blocks[active[1]])) {
-				var blockLeft = this.blocks[active[0]];
-				var blockRight = this.blocks[active[1]];
+			var head = this.blocks[active[0]];
+			var tail = this.blocks[active[1]];
 
-				console.log("CONNECT!")
+			if(head.adjacent(tail)) {
+				console.log("START ANIMATION")
 
-				var nextColour = this.level.nextSequence(blockLeft.colour);
+				head.active = tail.active = false;
 
-				this.animations.push(new Animation(blockLeft, blockRight, nextColour, function() {
-					blockLeft.setColour(nextColour);
-					blockRight.setColour(nextColour);
+				var nextColour = this.level.nextSequence(head.colour);
 
-					// TODO link blocks together
-					// TODO quads should be fully merged
+				// TODO will need to figure out which areas are actually adjacent
+				this.animation = new Animation(head.areas[0], tail.areas[0], function() {
+					console.log("complete")
 
-					//var linked = [active[0], active[1]];
-					var linkAdded = false;
+					// set colour, merge blocks
+					head.merge(tail);
+					head.colour = nextColour;
 
-					var linkLeft = this.getLinkForBlock(blockLeft.__key);
-					var linkRight = this.getLinkForBlock(blockRight.__key);
-
-					if(linkLeft && linkRight) {
-						// TODO merge
-					}
-					else if(linkLeft && !linkRight) {
-						console.log("found left link, adding right")
-						blockRight.addLink(linkLeft);
-						linkAdded = true;
-					}
-					else if(!linkLeft && linkRight) {
-						console.log("found right link, adding left")
-						blockLeft.addLink(linkRight);
-						linkAdded = true;
-					}
-
-					// no links yet, create new
-					if(!linkAdded) {
-						console.log("adding new link")
-						var link = new Link();
-
-						this.blocks[active[0]].addLink(link);
-						this.blocks[active[1]].addLink(link);
-
-						this.links.push(link);
-					}
-
-
-					debugLinks(this.links)
-					//debugBlocks(this.blocks)
-
-				}.bind(this)));
+					delete this.blocks[tail.key];
+				}.bind(this));
 			}
 		}
 	};
 
-	Grid.prototype.getLinkForBlock = function(key) {
-		for(var i = 0, len = this.links.length; i < len; ++i) {
-			if(this.links[i].has(key)) {
-				console.log("found link for " + key)
-				return this.links[i];
-			}
+	Grid.prototype.render = function() {
+		var context = this.game.context;
+
+		for(var key in this.blocks) {
+			var block = this.blocks[key];
+
+			block.areas.forEach(function(area) {
+				context.fillStyle = block.colour;
+				context.globalAlpha = block.active ? constants.TRANSPARENT : constants.OPAQUE;
+				context.fillRect(area.x, area.y, area.width, area.height);
+			});
 		}
-
-		console.log("no link found for " + key)
-
-		return null;
 	};
 
 	Grid.prototype.update = function(elapsed) {
-		var complete = 0;
+		if(this.animation == null) {
+			return;
+		}
 
-		this.animations.forEach(function(animation) {
-			// TODO remove and destroy if complete
-			if(animation.animate(elapsed)) {
-				animation.destroy();
-				complete++;
-			}
-		});
-
-		if(complete == this.animations.length) {
-			this.animations = [];
-		};
+		this.animation.animate(elapsed);
 	};
 
 	// TODO destroy

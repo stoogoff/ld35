@@ -107,18 +107,18 @@ define(function(require) {
 
 		for(var i = 0, len = points.length; i < len; ++i) {
 			if(block.hitArea.contains(points[i].x, points[i].y)) {
-				return true;
+				return block.hitArea;
 			}
 		}
 
-		return false;
+		return null;
 	};
 
-	Block.prototype.addLink = function(link) {
+	/*Block.prototype.addLink = function(link) {
 		console.log("linking... " + this.__key)
 		this.link = link;
 		this.link.add(this);
-	};
+	};*/
 
 	return Block;
 });

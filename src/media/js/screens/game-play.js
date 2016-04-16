@@ -45,7 +45,7 @@ define(function(require) {
 		var colours = Colours(this.game);
 
 		this.grid = new Grid(this.game, colours);
-		this.grid.render(level);
+		this.grid.create(level);
 
 		this.mouseDown = false;
 
@@ -62,6 +62,10 @@ define(function(require) {
 
 		this.mouseDown = game.input.mousePointer.isDown;
 		this.grid.update(game.time.elapsed);
+	};
+
+	GamePlay.prototype.render = function() {
+		this.grid.render();
 	};
 
 	return GamePlay;

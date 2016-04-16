@@ -18,7 +18,7 @@ define(function(require) {
 			BLUE: "#539fed"
 		},
 
-		DELETE_TIME: 500,
+		SPEED: 0.1,
 
 		TRANSPARENT: 0.7,
 		OPAQUE: 1,
