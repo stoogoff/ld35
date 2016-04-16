@@ -12,7 +12,7 @@ define(function(require) {
 
 
 	var level = {
-		size: 2,
+		size: 3,
 		sequence: [constants.COLOURS.RED, constants.COLOURS.GREEN, constants.COLOURS.BLUE],
 		grid: [
 			constants.COLOURS.RED, constants.COLOURS.RED, constants.COLOURS.GREEN,constants.COLOURS.BLUE,
