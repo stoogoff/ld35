@@ -2,9 +2,21 @@
 define(function(require) {
 	return {
 		// dimensions
-		SCREEN_WIDTH: 956,
-		SCREEN_HEIGHT: 350,
+		SCREEN_WIDTH: 800,
+		SCREEN_HEIGHT: 600,
 
+		PLAY_AREA_SIZE: 600,
+
+		PAD: 20,
+
+		COLOURS: {
+			RED: "#ff0000",
+			GREEN: "#35b23b",
+			BLUE: "#539fed"
+		},
+
+		// ------------------------------------------
+		// old
 		TILE_WIDTH: 160,
 		TILE_HEIGHT: 160,
 
