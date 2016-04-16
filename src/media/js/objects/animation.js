@@ -52,16 +52,25 @@ define(function(require) {
 			right = tmp;
 		}
 
-		var speed = (right.x - left.width - constants.PAD_HALF) / 500;
+		var speed = 0.1;
+
+		this.x = left.x;
+		this.y = left.y;
+		this.w = left.width;
+		this.h = left.height;
 
 		// work out whether it's an x or y animation
 		if(left.y == right.y) {
 			this.animations.push(new WidthAnimation(left, right.x, speed));
 			this.animations.push(new LeftAnimation(right, left.x + left.width, speed));
+
+			this.w = right.x + right.width - left.x;
 		}
 		else {
 			this.animations.push(new HeightAnimation(left, right.y, speed));
 			this.animations.push(new TopAnimation(right, left.y + left.height, speed));
+
+			this.h = right.y + right.height - left.y;
 		}
 	};
 
@@ -81,7 +90,7 @@ define(function(require) {
 		this.active = complete < this.animations.length;
 
 		if(!this.active) {
-			this.complete();
+			this.complete(this.x, this.y, this.w, this.h);
 		}
 
 		return !this.active;

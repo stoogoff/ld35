@@ -20,6 +20,9 @@ define(function(require) {
 
 		DELETE_TIME: 500,
 
+		TRANSPARENT: 0.7,
+		OPAQUE: 1,
+
 		// ------------------------------------------
 		// old
 		TILE_WIDTH: 160,
