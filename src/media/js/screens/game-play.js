@@ -7,30 +7,30 @@ define(function(require) {
 	var Colours = require("../objects/colours");
 
 
-
-
-
-
-	var size = 3;
-
-
-	var colourSequence = [constants.COLOURS.RED, constants.COLOURS.GREEN, constants.COLOURS.BLUE];
 	var fills = {};
 	var blocks = [];
 
 
-	var level = [
-		constants.COLOURS.RED, constants.COLOURS.RED, constants.COLOURS.GREEN,constants.COLOURS.BLUE,
-		constants.COLOURS.BLUE, constants.COLOURS.GREEN, constants.COLOURS.GREEN, constants.COLOURS.RED,
-		constants.COLOURS.RED, constants.COLOURS.RED, constants.COLOURS.RED, constants.COLOURS.GREEN,
-		constants.COLOURS.BLUE, constants.COLOURS.BLUE, constants.COLOURS.GREEN, constants.COLOURS.GREEN,
-		constants.COLOURS.RED, constants.COLOURS.RED
-	];
+	var level = {
+		size: 4,
+		sequence: [constants.COLOURS.RED, constants.COLOURS.GREEN, constants.COLOURS.BLUE],
+		grid: [
+			constants.COLOURS.RED, constants.COLOURS.RED, constants.COLOURS.GREEN,constants.COLOURS.BLUE,
+			constants.COLOURS.BLUE, constants.COLOURS.GREEN, constants.COLOURS.GREEN, constants.COLOURS.GREEN,
+			constants.COLOURS.RED, constants.COLOURS.RED, constants.COLOURS.GREEN, constants.COLOURS.RED,
+			constants.COLOURS.BLUE, constants.COLOURS.BLUE, constants.COLOURS.GREEN, constants.COLOURS.GREEN,
+			constants.COLOURS.RED, constants.COLOURS.RED
+		],
+		nextSequence: function(colour) {
+			for(var i = 0, len = this.sequence.length; i < len; ++i) {
+				if(this.sequence[i] == colour) {
+					var next = i + 1;
 
-
-
-
-
+					return this.sequence[next < len ? next : 0];
+				}
+			}
+		}
+	};
 
 
 	var GamePlay = function() {
@@ -38,15 +38,16 @@ define(function(require) {
 	};
 
 	GamePlay.prototype.create = function() {
-		var sidebar = helpers.createSolid(this.game, 200 - constants.PAD / 2, 600 - constants.PAD, "#333");
+		var sidebar = helpers.createSolid(this.game, 200 - constants.PAD, 600 - constants.PAD, "#333");
 
-		this.game.add.image(600, constants.PAD / 2, sidebar);
+		this.game.add.image(600 + constants.PAD_HALF, constants.PAD_HALF, sidebar);
 
 		var colours = Colours(this.game);
-		var grid = new Grid(this.game, size, colours);
 
-		grid.render(level);
+		this.grid = new Grid(this.game, colours);
+		this.grid.render(level);
 
+		this.mouseDown = false;
 
 		// TODO tap on block
 		// TODO tap on second block
@@ -55,7 +56,12 @@ define(function(require) {
 	};
 
 	GamePlay.prototype.update = function(game) {
+		if(!game.input.mousePointer.isDown && this.mouseDown) {
+			this.grid.activate(game.input.mousePointer.x, game.input.mousePointer.y);
+		}
 
+		this.mouseDown = game.input.mousePointer.isDown;
+		this.grid.update(game.time.elapsed);
 	};
 
 	return GamePlay;

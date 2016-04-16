@@ -8,12 +8,17 @@ define(function(require) {
 		PLAY_AREA_SIZE: 600,
 
 		PAD: 20,
+		PAD_HALF: 10,
+
+		MAX_ACTIVE: 2,
 
 		COLOURS: {
 			RED: "#ff0000",
 			GREEN: "#35b23b",
 			BLUE: "#539fed"
 		},
+
+		DELETE_TIME: 500,
 
 		// ------------------------------------------
 		// old
