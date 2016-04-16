@@ -1,7 +1,5 @@
 
 define(function(require) {
-
-
 	var Block = function(key, colour) {
 		this.key = key;
 		this.areas = [];

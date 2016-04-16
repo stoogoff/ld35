@@ -12,7 +12,7 @@ define(function(require) {
 
 
 	var level = {
-		size: 3,
+		size: 4,
 		sequence: [constants.COLOURS.RED, constants.COLOURS.GREEN, constants.COLOURS.BLUE],
 		grid: [
 			constants.COLOURS.RED, constants.COLOURS.RED, constants.COLOURS.GREEN,constants.COLOURS.BLUE,
@@ -49,10 +49,8 @@ define(function(require) {
 
 		this.mouseDown = false;
 
-		// TODO tap on block
-		// TODO tap on second block
-		// TODO merge blocks if they're the same colour
 		// TODO show some sort of indicator if they're different colours
+		// TODO touch input events
 	};
 
 	GamePlay.prototype.update = function(game) {

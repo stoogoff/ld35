@@ -126,7 +126,7 @@ define(function(require) {
 			console.log(to.forEach(debugRect))
 
 		// one block surrounds the other on two sides
-		if(from.length == 2 && to.length == 2) {
+		if(from.length > 1 && to.length > 1) {
 			var targetX = Math.min(to[0].x + to[0].width, to[1].x + to[1].width);
 			var targetY = Math.min(to[0].y + to[0].height, to[1].y + to[1].height);
 
