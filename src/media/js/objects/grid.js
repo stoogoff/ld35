@@ -84,15 +84,28 @@ define(function(require) {
 			var head = this.blocks[active[0]];
 			var tail = this.blocks[active[1]];
 
-			if(head.adjacent(tail)) {
+			var headAdjacent = tail.adjacent(head);
+			var tailAdjacent = head.adjacent(tail);
+
+			if(headAdjacent.length > 0 && tailAdjacent.length > 0) {
 				console.log("START ANIMATION")
+				console.log("headAdjacent.length = " + headAdjacent.length)
+				console.log("tailAdjacent.length = " + tailAdjacent.length)
+
+				// head is bigger than tail so merge head into tail rather than tail into head
+				if(head.areas.length > tail.areas.length) {
+					console.log("switch")
+					var tmp = headAdjacent;
+
+					headAdjacent = tailAdjacent;
+					tailAdjacent = tmp;
+				}
 
 				head.active = tail.active = false;
 
 				var nextColour = this.level.nextSequence(head.colour);
 
-				// TODO will need to figure out which areas are actually adjacent
-				this.animation = new Animation(head.areas[0], tail.areas[0], function() {
+				this.animation = new Animation(headAdjacent, tailAdjacent, function() {
 					console.log("complete")
 
 					// set colour, merge blocks
@@ -174,4 +187,15 @@ function debugBlock(block) {
 		height: block.height,
 		colour: c
 	};
+}
+
+function debugRect(rect) {
+	var r = {
+		x: rect.x,
+		y: rect.y,
+		width: rect.width,
+		height: rect.height
+	};
+
+	console.log(r)
 }

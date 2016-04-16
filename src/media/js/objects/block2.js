@@ -52,13 +52,17 @@ define(function(require) {
 			points.push(new Phaser.Point(p.x, p.y + h)); // below
 		}
 
-		for(var i = 0, len = points.length; i < len; ++i) {
-			if(block.contains(points[i].x, points[i].y)) {
-				return true;
+		var adjacent = [];
+
+		for(var i = 0, ilen = points.length; i < ilen; ++i) {
+			for(var j = 0, jlen = block.areas.length; j < jlen; ++j) {
+				if(block.areas[j].contains(points[i].x, points[i].y)) {
+					adjacent.push(block.areas[j]);
+				}
 			}
 		}
 
-		return false;
+		return adjacent;
 	};
 
 	return Block;
