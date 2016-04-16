@@ -29,26 +29,28 @@ define(function(require) {
 	};
 
 	Block.prototype.setActive = function(active) {
-		this.active = active;
-		this.alpha = this.active ? constants.TRANSPARENT : constants.OPAQUE;
+		function inner(b) {
+			b.active = active;
+			b.alpha = b.active ? constants.TRANSPARENT : constants.OPAQUE;
+		}
+
+		inner(this);
 
 		if(this.link) {
-			this.link.pass(this, function(linked) {
-				linked.active = active;
-				linked.alpha = linked.active ? constants.TRANSPARENT : constants.OPAQUE;
-			});
+			this.link.pass(this, inner);
 		}
 	};
 
 	Block.prototype.toggleActive = function() {
-		this.active = !this.active;
-		this.alpha = this.active ? constants.TRANSPARENT : constants.OPAQUE;
+		function inner(b) {
+			b.active = !b.active;
+			b.alpha = b.active ? constants.TRANSPARENT : constants.OPAQUE;
+		}
+
+		inner(this);
 
 		if(this.link) {
-			this.link.pass(this, function(linked) {
-				linked.active = !linked.active;
-				linked.alpha = linked.active ? constants.TRANSPARENT : constants.OPAQUE;
-			});
+			this.link.pass(this, inner);
 		}
 	};
 
@@ -57,14 +59,33 @@ define(function(require) {
 	};
 
 	Block.prototype.setColour = function(colour) {
-		this.colour = colour;
-		this.loadTexture(this.colours[colour]);
+		function inner(b) {
+			b.colour = colour;
+			b.loadTexture(b.colours[colour]);
+		}
+
+		inner(this);
 
 		if(this.link) {
-			this.link.pass(this, function(linked) {
-				linked.colour = colour;
-				linked.loadTexture(linked.colours[colour]);
+			this.link.pass(this, inner);
+		}
+	};
+
+	Block.prototype.dimensions = function(params) {
+		function inner(b) {
+			var keys = ["x", "y", "width", "height"];
+
+			keys.forEach(function(k) {
+				if(params[k]) {
+					b[k] = params[k];
+				}
 			});
+		}
+
+		inner(this);
+
+		if(this.link) {
+			this.link.pass(this, inner);
 		}
 	};
 

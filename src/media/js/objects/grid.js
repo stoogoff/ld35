@@ -22,7 +22,7 @@ define(function(require) {
 		this.tile = 0;
 		this.blocks = {};
 		this.animations = [];
-		this.linked = [];
+		this.links = [];
 	};
 
 	Grid.prototype.render = function(level) {
@@ -56,7 +56,7 @@ define(function(require) {
 		}
 
 		// TODO warn the user by flashing or something if they can't select another thing
-
+console.log("active.length = " + active.length)
 		// activate or deactivate
 		for(var key in this.blocks) {
 			var block = this.blocks[key];
@@ -76,37 +76,53 @@ define(function(require) {
 
 		if(active.length == constants.MAX_ACTIVE) {
 			if(this.blocks[active[0]].adjacent(this.blocks[active[1]])) {
+				var blockLeft = this.blocks[active[0]];
+				var blockRight = this.blocks[active[1]];
+
 				console.log("CONNECT!")
 
-				var nextColour = this.level.nextSequence(this.blocks[active[0]].colour);
+				var nextColour = this.level.nextSequence(blockLeft.colour);
 
-				this.animations.push(new Animation(this.blocks[active[0]], this.blocks[active[1]], nextColour, function(x, y, w, h) {
-					this.blocks[active[0]].setColour(nextColour);
-					this.blocks[active[1]].setColour(nextColour);
+				this.animations.push(new Animation(blockLeft, blockRight, nextColour, function() {
+					blockLeft.setColour(nextColour);
+					blockRight.setColour(nextColour);
 
 					// TODO link blocks together
 					// TODO quads should be fully merged
 
 					//var linked = [active[0], active[1]];
+					var linkAdded = false;
 
-					/*this.linked.forEach(function(link) {
-						if(link.has(active[0]) || link.has(active[1])) {
-							this.blocks[active[0]].link(link);
-							this.blocks[active[0]].link(link);
-						}
-					})*/
+					var linkLeft = this.getLinkForBlock(blockLeft.__key);
+					var linkRight = this.getLinkForBlock(blockRight.__key);
+
+					if(linkLeft && linkRight) {
+						// TODO merge
+					}
+					else if(linkLeft && !linkRight) {
+						console.log("found left link, adding right")
+						blockRight.addLink(linkLeft);
+						linkAdded = true;
+					}
+					else if(!linkLeft && linkRight) {
+						console.log("found right link, adding left")
+						blockLeft.addLink(linkRight);
+						linkAdded = true;
+					}
+
+					// no links yet, create new
+					if(!linkAdded) {
+						console.log("adding new link")
+						var link = new Link();
+
+						this.blocks[active[0]].addLink(link);
+						this.blocks[active[1]].addLink(link);
+
+						this.links.push(link);
+					}
 
 
-					// no links yet
-					var link = new Link();
-
-					this.blocks[active[0]].addLink(link);
-					this.blocks[active[1]].addLink(link);
-
-					this.linked.push(link);
-
-
-					debugLinks(this.linked)
+					debugLinks(this.links)
 					//debugBlocks(this.blocks)
 
 				}.bind(this)));
@@ -114,52 +130,80 @@ define(function(require) {
 		}
 	};
 
-	Grid.prototype.update = function(elapsed) {
-		this.animations.forEach(function(animation) {
-			// TODO remove and destroy if complete
-			animation.animate(elapsed);
-		});
-	};
-
-	function debugLinks(linked) {
-		linked.forEach(function(l) {
-			l.links.forEach(function(b) {
-				console.log(debugBlock(b))
-			})
-		});
-	}
-
-	function debugBlocks(blocks) {
-		var a = []
-
-		for(var k in blocks) {
-			a.push(debugBlock(blocks[k]))
+	Grid.prototype.getLinkForBlock = function(key) {
+		for(var i = 0, len = this.links.length; i < len; ++i) {
+			if(this.links[i].has(key)) {
+				console.log("found link for " + key)
+				return this.links[i];
+			}
 		}
 
-		console.log(a)
-	}
+		console.log("no link found for " + key)
 
-	function debugBlock(block) {
-		var c = "";
+		return null;
+	};
 
-		if(block.colour == constants.COLOURS.RED)
-			c = "RED"
-		else if(block.colour == constants.COLOURS.GREEN)
-			c = "GREEN"
-		else if(block.colour == constants.COLOURS.BLUE)
-			c = "BLUE"
+	Grid.prototype.update = function(elapsed) {
+		var complete = 0;
 
-		return {
-			key: block.__key,
-			x: block.x,
-			y: block.y,
-			width: block.width,
-			height: block.height,
-			colour: c
+		this.animations.forEach(function(animation) {
+			// TODO remove and destroy if complete
+			if(animation.animate(elapsed)) {
+				animation.destroy();
+				complete++;
+			}
+		});
+
+		if(complete == this.animations.length) {
+			this.animations = [];
 		};
-	}
+	};
 
 	// TODO destroy
 
 	return Grid;
 });
+
+
+
+function debugLinks(linked) {
+	console.log("LINKS")
+	linked.forEach(function(l) {
+		l.links.forEach(function(b) {
+			console.log(debugBlock(b))
+		})
+	});
+	console.log("--")
+}
+
+function debugBlocks(blocks) {
+	console.log("BLOCKS")
+	var a = []
+
+	for(var k in blocks) {
+		a.push(debugBlock(blocks[k]))
+	}
+
+	console.log(a)
+	console.log("--")
+}
+
+function debugBlock(block) {
+	var c = "";
+
+	if(block.colour == "#ff0000")
+		c = "RED"
+	else if(block.colour == "#35b23b")
+		c = "GREEN"
+	else if(block.colour == "#539fed")
+		c = "BLUE"
+
+	return {
+		key: block.__key,
+		x: block.x,
+		y: block.y,
+		width: block.width,
+		height: block.height,
+		colour: c
+	};
+}

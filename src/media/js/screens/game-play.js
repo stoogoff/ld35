@@ -52,7 +52,7 @@ define(function(require) {
 		// TODO tap on block
 		// TODO tap on second block
 		// TODO merge blocks if they're the same colour
-		// TODO show some sort of indiciator if they're different colours
+		// TODO show some sort of indicator if they're different colours
 	};
 
 	GamePlay.prototype.update = function(game) {

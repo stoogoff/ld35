@@ -4,48 +4,90 @@ define(function(require) {
 
 	var WidthAnimation = function(obj, target, speed) {
 		return function(elapsed) {
-			obj.width += speed * elapsed;
+			obj.dimensions({
+				"width": obj.width + (speed * elapsed)
+			});
 
-			return parseInt(obj.x + obj.width, 10) > target;
+			if(parseInt(obj.x + obj.width, 10) > target) {
+				obj.dimensions({
+					"width": target - obj.x
+				});
+
+				return true;
+			}
+
+			return false;
 		}
 	};
 
 	var HeightAnimation = function(obj, target, speed) {
 		return function(elapsed) {
-			obj.height += speed * elapsed;
+			obj.dimensions({
+				"height": obj.height + (speed * elapsed)
+			});
 
-			return parseInt(obj.y + obj.height, 10) > target;
+			if(parseInt(obj.y + obj.height, 10) > target) {
+				obj.dimensions({
+					"height": target - obj.x
+				});
+
+				return true;
+			}
+
+			return false;
 		}
 	};
 
 	var LeftAnimation = function(obj, target, speed) {
 		return function(elapsed) {
-			obj.width += speed * elapsed;
-			obj.x -= speed * elapsed;
+			obj.dimensions({
+				"width": obj.width + (speed * elapsed),
+				"x": obj.x - (speed * elapsed)
+			});
 
-			return parseInt(obj.x, 10) < target;
+			if(parseInt(obj.x, 10) < target) {
+				obj.dimensions({
+					"x": target
+				});
+
+				return true;
+			}
+
+			return false;
 		}
 	};
 
 	var TopAnimation = function(obj, target, speed) {
 		return function(elapsed) {
-			obj.height += speed * elapsed;
-			obj.y -= speed * elapsed;
+			obj.dimensions({
+				"height": obj.height + (speed * elapsed),
+				"y": obj.y - (speed * elapsed)
+			});
 
-			return parseInt(obj.y, 10) < target;
+			if(parseInt(obj.y, 10) < target) {
+				obj.dimensions({
+					"y": target
+				});
+
+				return true;
+			}
+
+			return false;
 		}
 	};
 
 
-	var AnimationGroup = function(left, right, colour, complete) {
+	var Animation = function(left, right, colour, complete) {
 		left.setActive(false);
 		right.setActive(false);
 
 		this.active = true;
 		this.animations = [];
-		this.complete = complete || function() {};
+		this.onComplete = complete || function() {};
 
 		if(left.y == right.y && left.x > right.x || left.x == right.x && left.y > right.y) {
+			console.log("switching left and right")
+
 			var tmp = left;
 
 			left = right;
@@ -54,27 +96,26 @@ define(function(require) {
 
 		var speed = 0.1;
 
-		this.x = left.x;
-		this.y = left.y;
-		this.w = left.width;
-		this.h = left.height;
+		console.log(debugBlock(left))
+		console.log(debugBlock(right))
+
+		// TODO handle special case for L shapes
+		// TODO handle special case when moving from L shape to a large block
 
 		// work out whether it's an x or y animation
 		if(left.y == right.y) {
-			this.animations.push(new WidthAnimation(left, right.x, speed));
-			this.animations.push(new LeftAnimation(right, left.x + left.width, speed));
-
-			this.w = right.x + right.width - left.x;
+			console.log("x animation")
+			this.animations.push(new WidthAnimation(left, right.x - constants.PAD_HALF, speed));
+			this.animations.push(new LeftAnimation(right, left.x + left.width + constants.PAD_HALF, speed));
 		}
 		else {
-			this.animations.push(new HeightAnimation(left, right.y, speed));
-			this.animations.push(new TopAnimation(right, left.y + left.height, speed));
-
-			this.h = right.y + right.height - left.y;
+			console.log("y animation")
+			this.animations.push(new HeightAnimation(left, right.y - constants.PAD_HALF, speed));
+			this.animations.push(new TopAnimation(right, left.y + left.height + constants.PAD_HALF, speed));
 		}
 	};
 
-	AnimationGroup.prototype.animate = function(elapsed) {
+	Animation.prototype.animate = function(elapsed) {
 		if(!this.active) {
 			return false;
 		}
@@ -90,22 +131,15 @@ define(function(require) {
 		this.active = complete < this.animations.length;
 
 		if(!this.active) {
-			this.complete(this.x, this.y, this.w, this.h);
+			this.onComplete();
 		}
 
 		return !this.active;
 	};
 
-	AnimationGroup.prototype.destroy = function() {
-		//this.left.width = this.right.x + this.right.width - this.left.x;
-
-
-		this.right.destroy(); // TODO this may need to be changed for L shaped pieces
-		this.left = null;
-		this.right = null;
-
-		console.log("called destroy on right")
+	Animation.prototype.destroy = function() {
+		this.animations = null;
 	};
 
-	return AnimationGroup;
+	return Animation;
 });

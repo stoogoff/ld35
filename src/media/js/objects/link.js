@@ -10,10 +10,8 @@ define(function(require) {
 	};
 
 	Link.prototype.add = function(block) {
-		for(var i = 0, len = this.links.length; i < len; ++i) {
-			if(this.match(this.links[i], block)) {
-				return;
-			}
+		if(this.has(block.__key)) {
+			return;
 		}
 
 		this.links.push(block);
@@ -38,8 +36,6 @@ define(function(require) {
 	};
 
 	Link.prototype.pass = function(from, callback) {
-		console.log("passing from " + from.__key)
-
 		for(var i = 0, len = this.links.length; i < len; ++i) {
 			if(!this.match(this.links[i], from)) {
 				callback(this.links[i]);
