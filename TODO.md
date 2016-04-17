@@ -27,6 +27,7 @@
 	- `Colour sequence`
 - `Audio`
 	- `Low key background music`
+	- mute button
 - GFX
 	- `Possible background image`
 	- Logo? Menu background image
@@ -37,3 +38,5 @@
 	- `Level end check doesn't order blocks correctly`
 	- Animation freak out
 	- Try again button hover
+	- `Par is awlays zero at the end`
+	- 4x4 grids don't finish

@@ -13,11 +13,11 @@ define(function(require) {
 	inherits(Menu, Phaser.State);
 
 	Menu.prototype.create = function() {
-		if(!this.game.musicPlaying) {
+		/*if(!this.game.musicPlaying) {
 			this.game.music = this.game.add.audio("theme", 1, true);
 			this.game.music.play("", 0, 1, true);
 			this.game.musicPlaying = true;
-		}
+		}*/
 
 		this.game.stage.backgroundColor = "black";
 		

@@ -9,6 +9,10 @@ define(function(require) {
 	var Overlay = require("../screens/overlay");
 	var levels = require("../data/levels");
 
+	console.log("LEVELS: " + levels.length)
+	console.log(levels.map(function(l) {
+		return l.par
+	}))
 
 	var GamePlay = function() {
 		Phaser.State.call(this);

@@ -73,7 +73,7 @@ define(function(require) {
 
 		var context = this.game.context;
 
-		context.globalAlpha = 0.7;
+		context.globalAlpha = 0.8;
 		context.fillStyle = constants.OVERLAY_COLOUR;
 		context.fillRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
 		context.globalAlpha = 1;

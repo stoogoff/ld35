@@ -21,7 +21,8 @@ define(function(require) {
 		COLOURS: {
 			RED: "#cb1f1f",
 			GREEN: "#35b23b",
-			BLUE: "#539fed"
+			BLUE: "#539fed",
+			PURPLE: "#9f46bf"
 		},
 
 		SPEED: 0.1,
