@@ -19,7 +19,7 @@ define(function(require) {
 		MAX_ACTIVE: 2,
 
 		COLOURS: {
-			RED: "#ff0000",
+			RED: "#cb1f1f",
 			GREEN: "#35b23b",
 			BLUE: "#539fed"
 		},

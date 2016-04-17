@@ -2,7 +2,7 @@
 define(function(require) {
 	var constants = require("../utils/constants");
 	var helpers = require("../utils/helpers");
-	var Block = require("./block2");
+	var Block = require("./block");
 	var Animation = require("./animation");
 	var Link = require("./link");
 
@@ -21,6 +21,13 @@ define(function(require) {
 		this.tile = 0;
 		this.blocks = {};
 		this.animation = null;
+
+		this.sfx = {
+			activate: this.game.add.audio("activate"),
+			deactivate: this.game.add.audio("deactivate"),
+			badlink: this.game.add.audio("badlink"),
+			goodlink: this.game.add.audio("goodlink")
+		};
 	};
 
 	Grid.prototype.create = function(level) {
@@ -52,16 +59,16 @@ define(function(require) {
 
 		for(var key in this.blocks) {
 			this.blocks[key].areas.forEach(function(area) {
+				var centroid = area.centroid();
+
 				areas.push({
 					colour: this.blocks[key].colour,
-					x: area.centerX,
-					y: area.centerY
+					x: centroid.x,
+					y: centroid.y
 				})
 			}.bind(this));
 		}
-		console.log(areas)
 
-		// TODO sort by co-ordinates messes up because of the animation of the block changing the position
 		areas.sort(function(a, b) {
 			if(a.y == b.y) {
 				return a.x > b.x;
@@ -94,6 +101,7 @@ define(function(require) {
 		var activated = active.length;
 
 		// TODO warn the user by flashing or something if they can't select another thing
+		var toPlay = null;
 
 		// activate or deactivate
 		for(var key in this.blocks) {
@@ -107,6 +115,13 @@ define(function(require) {
 					block.active = false;
 				}
 				
+				if(block.active) {
+					toPlay = this.sfx.activate;
+				}
+				else {
+					toPlay = this.sfx.deactivate;
+				}
+
 				addOrRemoveBlock(active, block);
 			}			
 		}
@@ -119,6 +134,8 @@ define(function(require) {
 			var tailAdjacent = head.adjacent(tail);
 
 			if(headAdjacent.length > 0 && tailAdjacent.length > 0) {
+				toPlay = this.sfx.goodlink;
+
 				console.log("START ANIMATION")
 				console.log("headAdjacent.length = " + headAdjacent.length)
 				console.log("tailAdjacent.length = " + tailAdjacent.length)
@@ -146,6 +163,14 @@ define(function(require) {
 					delete this.blocks[tail.key];
 				}.bind(this));
 			}
+			else {
+				console.log("bad link")
+				toPlay = this.sfx.badlink;
+			}
+		}
+
+		if(toPlay) {
+			toPlay.play();
 		}
 
 		// the player made a valid move

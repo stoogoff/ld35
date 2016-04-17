@@ -1,124 +1,87 @@
 
 define(function(require) {
 	var inherits = require("../utils/inherits");
-	var constants = require("../utils/constants");
 
-	var Block = function(key, game, x, y, w, h, colour, colours) {
-		Phaser.Image.call(this, game, x, y, colours[colour]);
+	var LockedRectangle = function(x, y, w, h) {
+		Phaser.Rectangle.call(this, x, y, w, h);
 
-		this.__key = key;
-		this.width = w;
-		this.height = h;
-		this.anchor.setTo(0, 0);
-		this.hitArea = new Phaser.Rectangle(x, y, w, h);
-		this.colour = colour;
-		this.colours = colours;
-		this.animation = null;
-		this.active = false;
-		this.link = null;
-
-		this.adjacencyPoint = new Phaser.Point(this.hitArea.centerX, this.hitArea.centerY);
-
-		game.add.existing(this);
+		this.initial = new Phaser.Rectangle(x, y, w, h);
 	};
 
-	inherits(Block, Phaser.Image);
+	inherits(LockedRectangle, Phaser.Rectangle);
+
+	LockedRectangle.prototype.centroid = function() {
+		return new Phaser.Point(this.initial.centerX, this.initial.centerY);
+	};
+
+	var Block = function(key, colour) {
+		this.key = key;
+		this.areas = [];
+		this.colour = colour;
+		this.active = false;
+	};
+
+	Block.prototype.addArea = function(x, y, w, h, initial) {
+		var rect = new LockedRectangle(x, y, w, h);
+
+		if(initial) {
+			rect.initial = initial;
+		}
+
+		this.areas.push(rect);
+	}
 
 	Block.prototype.contains = function(x, y) {
-		return this.hitArea.contains(x, y);
+		for(var i = 0, len = this.areas.length; i < len; ++i) {
+			if(this.areas[i].contains(x, y)) {
+				return true;
+			}
+		}
+
+		return false;
 	};
 
-	Block.prototype.setActive = function(active) {
-		function inner(b) {
-			b.active = active;
-			b.alpha = b.active ? constants.ACTIVE : constants.INACTIVE;
-		}
+	Block.prototype.merge = function(block) {
+		for(var i = 0, len = block.areas.length; i < len; ++i) {
+			var area = block.areas[i];
 
-		inner(this);
-
-		if(this.link) {
-			this.link.pass(this, inner);
-		}
-	};
-
-	Block.prototype.toggleActive = function() {
-		function inner(b) {
-			b.active = !b.active;
-			b.alpha = b.active ? constants.ACTIVE : constants.INACTIVE;
-		}
-
-		inner(this);
-
-		if(this.link) {
-			this.link.pass(this, inner);
-		}
-	};
-
-	Block.prototype.isActive = function() {
-		return this.active;
-	};
-
-	Block.prototype.setColour = function(colour) {
-		function inner(b) {
-			b.colour = colour;
-			b.loadTexture(b.colours[colour]);
-		}
-
-		inner(this);
-
-		if(this.link) {
-			this.link.pass(this, inner);
-		}
-	};
-
-	Block.prototype.dimensions = function(params) {
-		function inner(b) {
-			var keys = ["x", "y", "width", "height"];
-
-			keys.forEach(function(k) {
-				if(params[k]) {
-					b[k] = params[k];
-				}
-			});
-		}
-
-		inner(this);
-
-		if(this.link) {
-			this.link.pass(this, inner);
+			this.addArea(area.x, area.y, area.width, area.height, area.initial);
 		}
 	};
 
 	Block.prototype.adjacent = function(block) {
+		// two blocks of different colours can't be treated as adjacent
 		if(block.colour != this.colour) {
 			return false;
 		}
 
-		var p  = this.adjacencyPoint;
-		var w = this.hitArea.width;
-		var h = this.hitArea.height;
+		var points = [];
 
-		var points = [
-			new Phaser.Point(p.x - w, p.y), // left
-			new Phaser.Point(p.x + w, p.y), // right
-			new Phaser.Point(p.x, p.y - h), // above
-			new Phaser.Point(p.x, p.y + h)  // below
-		];
+		for(var i = 0, len = this.areas.length; i < len; ++i) {
+			var area = this.areas[i];
 
-		for(var i = 0, len = points.length; i < len; ++i) {
-			if(block.hitArea.contains(points[i].x, points[i].y)) {
-				return block.hitArea;
+			var p = area.centroid();
+			var w = area.width;
+			var h = area.height;
+
+			points.push(new Phaser.Point(p.x - w, p.y)); // left
+			points.push(new Phaser.Point(p.x + w, p.y)); // right
+			points.push(new Phaser.Point(p.x, p.y - h)); // above
+			points.push(new Phaser.Point(p.x, p.y + h)); // below
+		}
+
+		var adjacent = [];
+
+		for(var i = 0, ilen = points.length; i < ilen; ++i) {
+			for(var j = 0, jlen = block.areas.length; j < jlen; ++j) {
+				if(block.areas[j].initial.contains(points[i].x, points[i].y)) {
+					adjacent.push(block.areas[j]);
+				}
 			}
 		}
 
-		return null;
+		return adjacent;
 	};
-
-	/*Block.prototype.addLink = function(link) {
-		console.log("linking... " + this.__key)
-		this.link = link;
-		this.link.add(this);
-	};*/
 
 	return Block;
 });

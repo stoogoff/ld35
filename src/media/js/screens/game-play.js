@@ -7,65 +7,7 @@ define(function(require) {
 	var Target = require("../objects/target");
 	var Sequence = require("../objects/sequence");
 	var Overlay = require("../screens/overlay");
-
-	var levels = [
-		{
-			par: 4,
-			size: 2,
-			sequence: ["RED", "GREEN", "BLUE"],
-			grid: [
-				"RED", "RED",
-				"GREEN","GREEN"
-			],
-			target: [
-				"GREEN", "GREEN",
-				"BLUE", "BLUE"
-			]
-		},
-		{
-			par: 6,
-			size: 2,
-			sequence: ["RED", "GREEN", "BLUE"],
-			grid: [
-				"RED", "RED",
-				"GREEN","BLUE"
-			],
-			target: [
-				"RED", "RED",
-				"RED", "RED"
-			]
-		},
-		{
-			par: 12,
-			size: 3,
-			sequence: ["RED", "GREEN", "BLUE"],
-			grid: [
-				"GREEN", "GREEN", "BLUE",
-				"RED", "BLUE", "BLUE",
-				"GREEN", "RED", "RED"
-			],
-			target: [
-				"RED", "RED", "RED",
-				"GREEN", "GREEN", "GREEN",
-				"BLUE", "BLUE", "BLUE"
-			]
-		},
-		{
-			par: 12,
-			size: 3,
-			sequence: ["RED", "GREEN", "BLUE"],
-			grid: [
-				"BLUE", "RED", "RED",
-				"BLUE", "BLUE", "RED",
-				"GREEN", "RED", "GREEN"],
-			target: [
-				"BLUE", "RED", "BLUE",
-				"BLUE", "BLUE", "BLUE",
-				"BLUE", "RED", "BLUE"
-			]
-		}
-	];
-
+	var levels = require("../data/levels");
 
 
 	var GamePlay = function() {
@@ -77,7 +19,8 @@ define(function(require) {
 
 		var sidebar = helpers.createSolid(this.game, 200 - constants.PAD, 600 - constants.PAD, "rgba(50,50,50,0.7)");
 
-		this.game.add.image(600 + constants.PAD_HALF, constants.PAD_HALF, sidebar);
+		this.game.add.image(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.PAD_HALF, sidebar);
+		this.game.add.button(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.INFO_HEIGHT - constants.SEQUENCE_HEIGHT - constants.PAD * 3, "retry", this.restartLevel, this);
 
 		this.score = {
 			moves: 0,
@@ -106,7 +49,7 @@ define(function(require) {
 		var textX = constants.PLAY_AREA_SIZE + constants.PAD + constants.PAD_HALF;
 
 		this.staticText = {
-			level:    this.game.add.text(textX, constants.INFO_WIDTH + constants.PAD * 2,                             constants.TEXT.LEVEL, constants.STYLES.HUD),
+			level:    this.game.add.text(textX, constants.INFO_WIDTH + constants.PAD * 2,                              constants.TEXT.LEVEL, constants.STYLES.HUD),
 			levelPar: this.game.add.text(textX, constants.INFO_WIDTH + constants.PAD * 2 + constants.TEXT_PADDING,     constants.TEXT.PAR,   constants.STYLES.HUD),
 			moves:    this.game.add.text(textX, constants.INFO_WIDTH + constants.PAD * 3 + constants.TEXT_PADDING * 2, constants.TEXT.MOVES, constants.STYLES.HUD),
 			par:      this.game.add.text(textX, constants.INFO_WIDTH + constants.PAD * 3 + constants.TEXT_PADDING * 3, constants.TEXT.PAR,   constants.STYLES.HUD)
@@ -119,6 +62,10 @@ define(function(require) {
 			levelPar: this.game.add.text(textX, this.staticText.levelPar.y, this.level.par,              constants.STYLES.HUD),
 			moves:    this.game.add.text(textX, this.staticText.moves.y,    this.score.moves.toString(), constants.STYLES.HUD),
 			par:      this.game.add.text(textX, this.staticText.par.y,      this.score.par.toString(),   constants.STYLES.HUD),
+		};
+
+		this.sfx = {
+			completelevel: this.game.add.audio("completelevel")
 		};
 
 		// TODO retry button
@@ -182,15 +129,15 @@ define(function(require) {
 				if(this.grid.activate(game.input.mousePointer.x, game.input.mousePointer.y)) {
 					this.score.moves++;
 					this.dynamicText.moves.text = this.score.moves;
-
-					// TODO this doesn't want to check during the update but because the animation hasn't completed the getSequence call returns out of date information
-					var current = this.grid.getSequence();
-
-					if(this.level.isComplete(current)) {
-						console.log("---\n\nFINISHED LEVEL!\n\n---")
-						this.overlay.show(this.score.moves, this.level.par);
-					}
 				}
+			}
+
+			// TODO this doesn't want to check during the update but because the animation hasn't completed the getSequence call returns out of date information
+			var current = this.grid.getSequence();
+
+			if(this.level.isComplete(current)) {
+				this.sfx.completelevel.play();
+				this.overlay.show(this.score.moves, this.level.par);
 			}
 		}
 

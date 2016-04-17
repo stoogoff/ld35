@@ -2,17 +2,17 @@
 # TODO
 
 - A name!
-- Menus / Screens
+- `Menus / Screens`
 	- `Loading`
 	- `Main menu / level selector`
-	- Next level interstitial
+	- `Next level interstitial`
 	- `Game over`
-- SFX
-	- Activate
-	- Deactivate
-	- Failed to link boxes
-	- Linked boxes
-	- Hit the target
+- `SFX`
+	- `Activate`
+	- `Deactivate`
+	- `Failed to link boxes`
+	- `Linked boxes`
+	- `Complete level`
 - Gameplay UI
 	- `Background image?`
 	- `Target panel (the shape you're trying to achieve)`
@@ -22,15 +22,18 @@
 		- `Current level`
 		- `How many moves you've made`
 		- `Ongoing score? Par?`
-	- Restart level
+	- `Restart level`
 	- `Next level`
 	- `Colour sequence`
-- Audio
-	- Low key background music
+- `Audio`
+	- `Low key background music`
 - GFX
 	- `Possible background image`
 	- Logo? Menu background image
 - A dozen or more levels
 - Bug fixes
 	- `Highlighting bottom right grid tile highlights target for some reason`
-	- Need to click on the grid again after you've finished
+	- `Need to click on the grid again after you've finished`
+	- `Level end check doesn't order blocks correctly`
+	- Animation freak out
+	- Try again button hover

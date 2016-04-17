@@ -13,8 +13,11 @@ define(function(require) {
 	inherits(Menu, Phaser.State);
 
 	Menu.prototype.create = function() {
-		//this.music = this.game.add.audio("intro", 1, true);
-		//this.music.play("", 0, 1, true);
+		if(!this.game.musicPlaying) {
+			this.game.music = this.game.add.audio("theme", 1, true);
+			this.game.music.play("", 0, 1, true);
+			this.game.musicPlaying = true;
+		}
 
 		this.game.stage.backgroundColor = "black";
 		
@@ -31,10 +34,6 @@ define(function(require) {
 		if(this.game.input.activePointer.justPressed()) {
 			this.game.state.start("play");
 		}
-	};
-
-	Menu.prototype.shutdown = function() {
-		//this.music.stop();
 	};
 
 	var Start = function() {
