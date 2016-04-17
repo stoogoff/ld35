@@ -31,7 +31,7 @@ define(function(require) {
 	Block.prototype.setActive = function(active) {
 		function inner(b) {
 			b.active = active;
-			b.alpha = b.active ? constants.TRANSPARENT : constants.OPAQUE;
+			b.alpha = b.active ? constants.ACTIVE : constants.INACTIVE;
 		}
 
 		inner(this);
@@ -44,7 +44,7 @@ define(function(require) {
 	Block.prototype.toggleActive = function() {
 		function inner(b) {
 			b.active = !b.active;
-			b.alpha = b.active ? constants.TRANSPARENT : constants.OPAQUE;
+			b.alpha = b.active ? constants.ACTIVE : constants.INACTIVE;
 		}
 
 		inner(this);

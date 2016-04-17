@@ -7,6 +7,11 @@ define(function(require) {
 
 		PLAY_AREA_SIZE: 600,
 
+		INFO_WIDTH: 200,
+		INFO_HEIGHT: 600,
+
+		SEQUENCE_HEIGHT: 20,
+
 		PAD: 20,
 		PAD_HALF: 10,
 
@@ -20,30 +25,30 @@ define(function(require) {
 
 		SPEED: 0.1,
 
-		TRANSPARENT: 0.7,
-		OPAQUE: 1,
+		INACTIVE: 1,
+		ACTIVE: 0.7,
+
+
+		TEXT: {
+			MOVES: "Moves: ",
+			LEVEL: "Level: ",
+			PAR: "Par: "
+		},
+
+		HUD_PADDING: 40,
+
+		STYLES: {
+			HUD: {
+				font: "bold 20px Arial",
+				fill: "#ffffff",
+				align: "right"
+			}
+		},
+
 
 		// ------------------------------------------
 		// old
-		TILE_WIDTH: 160,
-		TILE_HEIGHT: 160,
 
-		PLAYER_WIDTH: 120,
-		PLAYER_HEIGHT: 120,
-
-		// game constants
-		ENEMY_MAX: 20,
-		FEAR_RANGE: 460,
-		JUMP_SMALL: 275,
-		JUMP_FULL: 400,
-		GRAVITY_WORLD: 400,
-		GRAVITY_PLAYER: 400,
-
-		SPEED_START: 200,
-		SPEED_INCREMENT: 40,
-
-		SCORE_KILL: 10,
-		SCORE_FALL: 1,
 
 		MUSIC_FADE: 1000,
 
@@ -60,9 +65,6 @@ define(function(require) {
 			fill: "#ffffff",
 			align: "left"
 		},
-		STYLE_HUD: {
-			font: "bold 16px Arial",
-			fill: "#cfcfcf"
-		}
+
 	};
 });

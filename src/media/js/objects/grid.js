@@ -15,9 +15,8 @@ define(function(require) {
 		}		
 	}
 
-	var Grid = function(game, colours) {
+	var Grid = function(game) {
 		this.game = game;
-		this.colours = colours;
 		this.level = null;
 		this.tile = 0;
 		this.blocks = {};
@@ -61,8 +60,11 @@ define(function(require) {
 
 	Grid.prototype.activate = function(x, y) {
 		var active = this.activeBlocks();
+		var activated = active.length;
 
 		// TODO warn the user by flashing or something if they can't select another thing
+
+
 
 		// activate or deactivate
 		for(var key in this.blocks) {
@@ -116,6 +118,8 @@ define(function(require) {
 				}.bind(this));
 			}
 		}
+
+		return activated != active.length;
 	};
 
 	Grid.prototype.render = function() {
@@ -126,10 +130,12 @@ define(function(require) {
 
 			block.areas.forEach(function(area) {
 				context.fillStyle = block.colour;
-				context.globalAlpha = block.active ? constants.TRANSPARENT : constants.OPAQUE;
+				context.globalAlpha = block.active ? constants.ACTIVE : constants.INACTIVE;
 				context.fillRect(area.x, area.y, area.width, area.height);
 			});
 		}
+
+		context.globalAlpha = 1;
 	};
 
 	Grid.prototype.update = function(elapsed) {

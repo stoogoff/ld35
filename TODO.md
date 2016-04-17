@@ -1,2 +1,35 @@
 
-...
+# TODO
+
+- A name!
+- Menus / Screens
+	- Loading
+	- Main menu / level selector
+	- Next level interstitial
+	- Game over
+- SFX
+	- Activate
+	- Deactivate
+	- Failed to link boxes
+	- Linked boxes
+	- Hit the target
+- Gameplay UI
+	- Background image?
+	- `Target panel (the shape you're trying to achieve)`
+		- highlight correct area???
+	- Handle touch events
+	- Other info:
+		- `Current level`
+		- `How many moves you've made`
+		- Ongoing score? Par?
+	- Restart level
+	- Next level
+	- `Colour sequence`
+- Audio
+	- Low key background music
+- GFX
+	- Possible background image
+	- Logo?
+- A dozen or more levels
+- Bug fixes
+	- `Highlighting bottom right grid tile highlights target for some reason`
