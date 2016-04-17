@@ -67,7 +67,6 @@ define(function(require) {
 			completelevel: this.game.add.audio("completelevel")
 		};
 
-		// TODO retry button
 		// TODO show some sort of indicator if they're different colours
 		// TODO touch input events
 	};

@@ -5,7 +5,13 @@ define(function(require) {
 	};
 
 	Preload.prototype.preload = function() {
-		this.load.image("background", "media/img/background.png");
+		var bg = ["background", "menu"];
+
+		bg.forEach(function(key) {
+			this.load.image(key, "media/img/" + key + ".png");
+
+		}.bind(this));
+
 		this.load.spritesheet("retry", "media/img/retry.png", 180, 40);
 		this.load.audio("theme", ["media/audio/music.mp3", "media/audio/music.ogg"]);
 

@@ -28,9 +28,9 @@
 - `Audio`
 	- `Low key background music`
 	- mute button
-- GFX
+- `GFX`
 	- `Possible background image`
-	- Logo? Menu background image
+	- `Logo? Menu background image`
 - `A dozen or more levels`
 - Bug fixes
 	- `Highlighting bottom right grid tile highlights target for some reason`

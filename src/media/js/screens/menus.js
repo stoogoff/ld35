@@ -20,8 +20,9 @@ define(function(require) {
 		}
 
 		this.game.stage.backgroundColor = "black";
+		this.game.add.image(0, 0, "menu");
 		
-		this.titleText = this.game.add.text(this.game.world.centerX, 100, this.title, constants.STYLES.TITLE);
+		this.titleText = this.game.add.text(this.game.world.centerX, 110, this.title, constants.STYLES.TITLE);
 		this.titleText.anchor.setTo(0.5, 0);
 
 		this.infoText = this.game.add.text(this.game.world.centerX, 220, this.messages.join("\n\n"), constants.STYLES.BODY);
