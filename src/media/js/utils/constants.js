@@ -1,7 +1,8 @@
 
 define(function(require) {
 	return {
-		// dimensions
+		OVERLAY_COLOUR: "rgba(0, 0, 0, 1)",
+
 		SCREEN_WIDTH: 800,
 		SCREEN_HEIGHT: 600,
 
@@ -40,8 +41,7 @@ define(function(require) {
 		STYLES: {
 			HUD: {
 				font: "bold 20px Arial",
-				fill: "#ffffff",
-				align: "right"
+				fill: "#ffffff"
 			},
 			TITLE: {
 				font: "65px Arial",
@@ -52,20 +52,8 @@ define(function(require) {
 			},
 			BODY: {
 				font: "16px Arial",
-				fill: "#ffffff",
-				align: "left"
+				fill: "#ffffff"
 			},
-		},
-
-
-		// ------------------------------------------
-		// old
-
-
-		MUSIC_FADE: 1000,
-
-		// font styles
-
-
+		}
 	};
 });

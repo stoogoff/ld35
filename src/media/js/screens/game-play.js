@@ -6,6 +6,7 @@ define(function(require) {
 	var Level = require("../objects/level");
 	var Target = require("../objects/target");
 	var Sequence = require("../objects/sequence");
+	var Overlay = require("../screens/overlay");
 
 	var levels = [
 		{
@@ -96,6 +97,10 @@ define(function(require) {
 		this.grid = new Grid(this.game);
 		this.grid.create(this.level);
 
+		this.overlay = new Overlay(this.game, function() {
+			this.nextLevel();
+		}.bind(this));
+
 		this.mouseDown = false;
 
 		var textX = constants.PLAY_AREA_SIZE + constants.PAD + constants.PAD_HALF;
@@ -122,8 +127,6 @@ define(function(require) {
 	};
 
 	GamePlay.prototype.nextLevel = function() {
-		// TODO some sort of level interstitial
-
 		// update scores
 		this.score.par = this.score.moves - this.level.par;
 		this.dynamicText.par.text = this.score.par.toString();
@@ -165,19 +168,28 @@ define(function(require) {
 	};
 
 	GamePlay.prototype.update = function(game) {
-		this.grid.update(game.time.elapsed);
+		var isClicked = !game.input.mousePointer.isDown && this.mouseDown;
 
-		if(!game.input.mousePointer.isDown && this.mouseDown) {
-			if(this.grid.activate(game.input.mousePointer.x, game.input.mousePointer.y)) {
-				this.score.moves++;
-				this.dynamicText.moves.text = this.score.moves;
+		if(this.overlay.visible) {
+			if(isClicked) {
+				this.overlay.hide();
+			}
+		}
+		else {
+			this.grid.update(game.time.elapsed);
 
-				// TODO this doesn't want to check during the update but because the animation hasn't completed the getSequence call returns out of date information
-				var current = this.grid.getSequence();
+			if(isClicked) {
+				if(this.grid.activate(game.input.mousePointer.x, game.input.mousePointer.y)) {
+					this.score.moves++;
+					this.dynamicText.moves.text = this.score.moves;
 
-				if(this.level.isComplete(current)) {
-					console.log("---\n\nFINISHED LEVEL!\n\n---")
-					this.nextLevel();
+					// TODO this doesn't want to check during the update but because the animation hasn't completed the getSequence call returns out of date information
+					var current = this.grid.getSequence();
+
+					if(this.level.isComplete(current)) {
+						console.log("---\n\nFINISHED LEVEL!\n\n---")
+						this.overlay.show(this.score.moves, this.level.par);
+					}
 				}
 			}
 		}
@@ -189,6 +201,7 @@ define(function(require) {
 		this.grid.render();
 		this.target.render();
 		this.sequence.render();
+		this.overlay.render();
 	};
 
 	return GamePlay;
