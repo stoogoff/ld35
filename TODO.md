@@ -3,10 +3,10 @@
 
 - A name!
 - Menus / Screens
-	- Loading
-	- Main menu / level selector
+	- `Loading`
+	- `Main menu / level selector`
 	- Next level interstitial
-	- Game over
+	- `Game over`
 - SFX
 	- Activate
 	- Deactivate
@@ -14,22 +14,23 @@
 	- Linked boxes
 	- Hit the target
 - Gameplay UI
-	- Background image?
+	- `Background image?`
 	- `Target panel (the shape you're trying to achieve)`
 		- highlight correct area???
 	- Handle touch events
-	- Other info:
+	- `Other info:`
 		- `Current level`
 		- `How many moves you've made`
-		- Ongoing score? Par?
+		- `Ongoing score? Par?`
 	- Restart level
-	- Next level
+	- `Next level`
 	- `Colour sequence`
 - Audio
 	- Low key background music
 - GFX
-	- Possible background image
-	- Logo?
+	- `Possible background image`
+	- Logo? Menu background image
 - A dozen or more levels
 - Bug fixes
 	- `Highlighting bottom right grid tile highlights target for some reason`
+	- Need to click on the grid again after you've finished

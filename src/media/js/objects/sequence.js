@@ -25,10 +25,14 @@ define(function(require) {
 	Sequence.prototype.render = function() {
 		var context = this.game.context;
 
+		context.globalAlpha = 0.9;
+
 		this.sequence.forEach(function(block) {
 			context.fillStyle = block.colour;
 			context.fillRect(block.x, block.y, block.width, block.height);
 		});
+
+		context.globalAlpha = 1;
 	};
 
 	return Sequence;

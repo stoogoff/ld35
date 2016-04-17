@@ -35,14 +35,26 @@ define(function(require) {
 			PAR: "Par: "
 		},
 
-		HUD_PADDING: 40,
+		TEXT_PADDING: 40,
 
 		STYLES: {
 			HUD: {
 				font: "bold 20px Arial",
 				fill: "#ffffff",
 				align: "right"
-			}
+			},
+			TITLE: {
+				font: "65px Arial",
+				fill: "#ffffff",
+				align: "center",
+				stroke: "black",
+				strokeThickness: 2
+			},
+			BODY: {
+				font: "16px Arial",
+				fill: "#ffffff",
+				align: "left"
+			},
 		},
 
 
@@ -53,18 +65,7 @@ define(function(require) {
 		MUSIC_FADE: 1000,
 
 		// font styles
-		STYLE_TITLE: {
-			font: "65px Arial",
-			fill: "#ffffff",
-			align: "center",
-			stroke: "black",
-			strokeThickness: 2
-		},
-		STYLE_BODY: {
-			font: "16px Arial",
-			fill: "#ffffff",
-			align: "left"
-		},
+
 
 	};
 });

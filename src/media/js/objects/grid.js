@@ -24,6 +24,7 @@ define(function(require) {
 	};
 
 	Grid.prototype.create = function(level) {
+		this.blocks = {};
 		this.level = level;
 		this.tile = parseInt(constants.PLAY_AREA_SIZE / this.level.size, 10) - constants.PAD;
 
@@ -46,6 +47,36 @@ define(function(require) {
 		}
 	};
 
+	Grid.prototype.getSequence = function() {
+		var areas = [];
+
+		for(var key in this.blocks) {
+			this.blocks[key].areas.forEach(function(area) {
+				areas.push({
+					colour: this.blocks[key].colour,
+					x: area.centerX,
+					y: area.centerY
+				})
+			}.bind(this));
+		}
+		console.log(areas)
+
+		// TODO sort by co-ordinates messes up because of the animation of the block changing the position
+		areas.sort(function(a, b) {
+			if(a.y == b.y) {
+				return a.x > b.x;
+			}
+			
+			return a.y > b.y;
+		});
+
+		areas = areas.map(function(a) {
+			return a.colour;
+		});
+
+		return areas;
+	};
+
 	Grid.prototype.activeBlocks = function() {
 		var active = [];
 
@@ -56,15 +87,13 @@ define(function(require) {
 		}
 
 		return active;
-	}
+	};
 
 	Grid.prototype.activate = function(x, y) {
 		var active = this.activeBlocks();
 		var activated = active.length;
 
 		// TODO warn the user by flashing or something if they can't select another thing
-
-
 
 		// activate or deactivate
 		for(var key in this.blocks) {
@@ -119,6 +148,7 @@ define(function(require) {
 			}
 		}
 
+		// the player made a valid move
 		return activated != active.length;
 	};
 
@@ -185,12 +215,20 @@ function debugBlock(block) {
 	else if(block.colour == "#539fed")
 		c = "BLUE"
 
+	var areas = [];
+
+	block.areas.forEach(function(a) {
+		areas.push({
+			x: a.x,
+			y: a.y,
+			width: a.width,
+			height: a.height
+		});
+	});
+
 	return {
 		key: block.__key,
-		x: block.x,
-		y: block.y,
-		width: block.width,
-		height: block.height,
+		areas: areas,
 		colour: c
 	};
 }

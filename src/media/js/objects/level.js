@@ -1,15 +1,39 @@
 
 define(function(require) {
+	var constants = require("../utils/constants");
+
+	function convertColoursToValues(input) {
+		var output = [];
+
+		input.forEach(function(key) {
+			output.push(constants.COLOURS[key]);
+		});
+
+		return output;
+	}
+
 	var Level = function(data) {
 		this.par = data.par;
 		this.size = data.size;
-		this.sequence = data.sequence;
-		this.grid = data.grid;
-		this.target = data.target;
+		this.sequence = convertColoursToValues(data.sequence);
+		this.grid = convertColoursToValues(data.grid);
+		this.target = convertColoursToValues(data.target);
 	};
 
 	Level.prototype.isComplete = function(state) {
-		// return true if state matches target
+		if(state.length != this.target.length) {
+			return false;
+		}
+
+		var match = 0;
+
+		state.forEach(function(colour, index) {
+			if(colour == this.target[index]) {
+				match++;
+			}
+		}.bind(this));
+
+		return match == this.target.length;
 	};
 
 	Level.prototype.nextSequence = function(colour) {
