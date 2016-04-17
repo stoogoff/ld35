@@ -9,11 +9,6 @@ define(function(require) {
 	var Overlay = require("../screens/overlay");
 	var levels = require("../data/levels");
 
-	console.log("LEVELS: " + levels.length)
-	console.log(levels.map(function(l) {
-		return l.par
-	}))
-
 	var GamePlay = function() {
 		Phaser.State.call(this);
 	};
@@ -24,7 +19,7 @@ define(function(require) {
 		var sidebar = helpers.createSolid(this.game, 200 - constants.PAD, 600 - constants.PAD, "rgba(50,50,50,0.7)");
 
 		this.game.add.image(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.PAD_HALF, sidebar);
-		this.game.add.button(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.INFO_HEIGHT - constants.SEQUENCE_HEIGHT - constants.PAD * 3, "retry", this.restartLevel, this);
+		this.game.add.button(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.INFO_HEIGHT - constants.SEQUENCE_HEIGHT - constants.PAD * 3, "retry", this.restartLevel, this, 1, 0, 2, 0);
 
 		this.score = {
 			moves: 0,
@@ -79,7 +74,7 @@ define(function(require) {
 
 	GamePlay.prototype.nextLevel = function() {
 		// update scores
-		this.score.par = this.score.moves - this.level.par;
+		this.score.par += this.score.moves - this.level.par;
 		this.dynamicText.par.text = this.score.par.toString();
 
 		this.score.moves = 0;

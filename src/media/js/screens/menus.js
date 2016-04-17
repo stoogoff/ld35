@@ -13,11 +13,11 @@ define(function(require) {
 	inherits(Menu, Phaser.State);
 
 	Menu.prototype.create = function() {
-		/*if(!this.game.musicPlaying) {
+		if(!this.game.musicPlaying) {
 			this.game.music = this.game.add.audio("theme", 1, true);
 			this.game.music.play("", 0, 1, true);
 			this.game.musicPlaying = true;
-		}*/
+		}
 
 		this.game.stage.backgroundColor = "black";
 		
@@ -37,13 +37,13 @@ define(function(require) {
 	};
 
 	var Start = function() {
-		Menu.call(this, "Colour Block Thing", ["Join same colour blocks together to create a new block", "Click anywhere to start"]);
+		Menu.call(this, "Mixle", ["Join same colour blocks together to create a new block", "Click anywhere to start"]);
 	};
 
 	inherits(Start, Menu);
 
 	var GameOver = function() {
-		Menu.call(this, "Game Over!", ["You finished all the levels currently available.", "Par: $", "Click anywhere to play again"]);
+		Menu.call(this, "Game Over!", ["You finished all the levels currently available.", "Your score: $", "Click anywhere to play again"]);
 	};
 
 	inherits(GameOver, Menu);

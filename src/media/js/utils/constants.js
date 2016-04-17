@@ -20,6 +20,7 @@ define(function(require) {
 
 		COLOURS: {
 			RED: "#cb1f1f",
+			ORANGE: "#ffcc15",
 			GREEN: "#35b23b",
 			BLUE: "#539fed",
 			PURPLE: "#9f46bf"

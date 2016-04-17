@@ -120,18 +120,10 @@ define(function(require) {
 		this.active = true;
 		this.onComplete = complete || function() {};
 
-			console.log("from")
-			console.log(from.forEach(debugRect))
-			console.log("to")
-			console.log(to.forEach(debugRect))
-
 		// one block surrounds the other on two sides
 		if(from.length > 1 && to.length > 1) {
-			var targetX = Math.min(to[0].x + to[0].width, to[1].x + to[1].width);
-			var targetY = Math.min(to[0].y + to[0].height, to[1].y + to[1].height);
-
-			console.log("targetX = " + targetX);
-			console.log("targetY = " + targetY);
+			var targetX = Math.min(to[0].initial.x + to[0].initial.width, to[1].initial.x + to[1].initial.width);
+			var targetY = Math.min(to[0].initial.y + to[0].initial.height, to[1].initial.y + to[1].initial.height);
 
 			from = from[0];
 
@@ -157,22 +149,18 @@ define(function(require) {
 			from = from[0];
 			to = to[0];
 
-			if(from.y < to.y) {
-				console.log("HeightAnimation")
-				this.animation = HeightAnimation(from, to.y);
+			if(from.initial.y < to.initial.y) {
+				this.animation = HeightAnimation(from, to.initial.y);
 			}
-			else if(from.y > to.y) {
-				console.log("TopAnimation")
-				this.animation = TopAnimation(from, to.y + to.height)
+			else if(from.initial.y > to.initial.y) {
+				this.animation = TopAnimation(from, to.initial.y + to.initial.height)
 			}
 			else {
-				if(from.x < to.x) {
-					console.log("WidthAnimation")
-					this.animation = WidthAnimation(from, to.x);
+				if(from.initial.x < to.initial.x) {
+					this.animation = WidthAnimation(from, to.initial.x);
 				}
 				else {
-					console.log("LeftAnimation")
-					this.animation = LeftAnimation(from, to.x + to.width);
+					this.animation = LeftAnimation(from, to.initial.x + to.initial.width);
 				}
 			}
 		}

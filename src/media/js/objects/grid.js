@@ -56,7 +56,7 @@ define(function(require) {
 
 	Grid.prototype.getSequence = function() {
 		var areas = [];
-
+b=this.blocks
 		for(var key in this.blocks) {
 			this.blocks[key].areas.forEach(function(area) {
 				var centroid = area.centroid();
@@ -71,12 +71,12 @@ define(function(require) {
 
 		areas.sort(function(a, b) {
 			if(a.y == b.y) {
-				return a.x > b.x;
+				return a.x == b.x ? 0 : (a.x > b.x ? 1 : -1);
 			}
 			
-			return a.y > b.y;
+			return a.y > b.y ? 1 : -1;
 		});
-
+a=areas;
 		areas = areas.map(function(a) {
 			return a.colour;
 		});
@@ -136,13 +136,13 @@ define(function(require) {
 			if(headAdjacent.length > 0 && tailAdjacent.length > 0) {
 				toPlay = this.sfx.goodlink;
 
-				console.log("START ANIMATION")
-				console.log("headAdjacent.length = " + headAdjacent.length)
-				console.log("tailAdjacent.length = " + tailAdjacent.length)
+				//console.log("START ANIMATION")
+				//console.log("headAdjacent.length = " + headAdjacent.length)
+				//console.log("tailAdjacent.length = " + tailAdjacent.length)
 
 				// head is bigger than tail so merge head into tail rather than tail into head
 				if(head.areas.length > tail.areas.length) {
-					console.log("switch")
+					//console.log("switch")
 					var tmp = headAdjacent;
 
 					headAdjacent = tailAdjacent;
@@ -154,9 +154,6 @@ define(function(require) {
 				var nextColour = this.level.nextSequence(head.colour);
 
 				this.animation = new Animation(headAdjacent, tailAdjacent, function() {
-					console.log("complete")
-
-					// set colour, merge blocks
 					head.merge(tail);
 					head.colour = nextColour;
 
@@ -164,7 +161,6 @@ define(function(require) {
 				}.bind(this));
 			}
 			else {
-				console.log("bad link")
 				toPlay = this.sfx.badlink;
 			}
 		}

@@ -15,7 +15,7 @@ define(function(require) {
 			]
 		},
 		{
-			par: 6,
+			par: 4,
 			size: 2,
 			sequence: ["RED", "GREEN", "BLUE"],
 			grid: [
@@ -111,7 +111,7 @@ define(function(require) {
 				"GREEN", "GREEN", "GREEN"
 			]
 		},
-		{
+		{ // H
 			par: 12,
 			size: 3,
 			sequence: ["RED", "GREEN", "BLUE"],
@@ -213,7 +213,7 @@ define(function(require) {
 				"PURPLE", "PURPLE", "PURPLE"
 			]
 		},
-		{
+		{ // issue with animation at the end
 			par: 16,
 			size: 3,
 			sequence: ["RED", "GREEN", "BLUE", "PURPLE"],
@@ -228,9 +228,8 @@ define(function(require) {
 				"PURPLE", "PURPLE", "PURPLE"
 			]
 		},
-		// TODO this one doesn't complete for some reason
 		{
-			par: 16,
+			par: 24,
 			size: 4,
 			sequence: ["RED", "GREEN", "BLUE", "PURPLE"],
 			grid: [
@@ -247,7 +246,7 @@ define(function(require) {
 			]
 		},
 		{
-			par: 16,
+			par: 28,
 			size: 4,
 			sequence: ["RED", "GREEN", "BLUE", "PURPLE"],
 			grid: [
@@ -262,6 +261,41 @@ define(function(require) {
 				"BLUE", "PURPLE", "BLUE", "PURPLE",
 				"BLUE", "BLUE", "BLUE", "PURPLE"
 			]
+		},
+		{
+			par: 28,
+			size: 4,
+			sequence: ["RED", "GREEN", "BLUE", "PURPLE"],
+			grid: [
+				"GREEN", "PURPLE", "GREEN", "GREEN",
+				"RED", "GREEN", "PURPLE", "BLUE",
+				"RED", "GREEN", "BLUE", "BLUE",
+				"BLUE", "RED", "RED", "GREEN"
+			],
+			target: [
+				"GREEN", "GREEN", "GREEN", "GREEN",
+				"GREEN", "RED", "RED", "GREEN",
+				"GREEN", "RED", "RED", "GREEN",
+				"GREEN", "GREEN", "GREEN", "GREEN"
+			]
+		},
+		{
+			par: 26,
+			size: 4,
+			sequence: ["RED", "ORANGE", "GREEN", "BLUE", "PURPLE"],
+			grid: [
+				"ORANGE", "PURPLE", "ORANGE", "RED",
+				"RED", "BLUE", "RED", "RED",
+				"BLUE", "BLUE", "PURPLE", "BLUE",
+				"BLUE", "PURPLE", "ORANGE", "BLUE"
+			],
+			target: [
+				"BLUE", "BLUE", "GREEN", "GREEN",
+				"BLUE", "BLUE", "BLUE", "GREEN",
+				"RED", "BLUE", "BLUE", "BLUE",
+				"RED", "RED", "BLUE", "BLUE"
+			]
 		}
+
 	];
 });

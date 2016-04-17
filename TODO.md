@@ -1,7 +1,7 @@
 
 # TODO
 
-- A name!
+- `A name!`
 - `Menus / Screens`
 	- `Loading`
 	- `Main menu / level selector`
@@ -31,12 +31,14 @@
 - GFX
 	- `Possible background image`
 	- Logo? Menu background image
-- A dozen or more levels
+- `A dozen or more levels`
 - Bug fixes
 	- `Highlighting bottom right grid tile highlights target for some reason`
 	- `Need to click on the grid again after you've finished`
 	- `Level end check doesn't order blocks correctly`
 	- Animation freak out
-	- Try again button hover
+		- No longer freaks out but some layouts still cause weird issues (e.g trying to grow across the board on )
+	- `Try again button hover`
 	- `Par is awlays zero at the end`
-	- 4x4 grids don't finish
+	- `4x4 grids don't finish`
+	- `Par resets itself at the end of the level`
