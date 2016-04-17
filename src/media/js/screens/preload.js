@@ -5,7 +5,7 @@ define(function(require) {
 	};
 
 	Preload.prototype.preload = function() {
-		var bg = ["background", "menu"];
+		var bg = ["background", "menu", "mute"];
 
 		bg.forEach(function(key) {
 			this.load.image(key, "media/img/" + key + ".png");

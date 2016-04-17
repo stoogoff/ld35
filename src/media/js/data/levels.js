@@ -26,7 +26,7 @@ define(function(require) {
 				"BLUE", "GREEN",
 				"BLUE", "GREEN"
 			]
-		}/*,
+		},
 		{
 			par: 6,
 			size: 2,
@@ -295,6 +295,6 @@ define(function(require) {
 				"RED", "BLUE", "BLUE", "BLUE",
 				"RED", "RED", "BLUE", "BLUE"
 			]
-		}*/
+		}
 	];
 });

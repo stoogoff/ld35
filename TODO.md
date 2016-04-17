@@ -27,7 +27,7 @@
 	- `Colour sequence`
 - `Audio`
 	- `Low key background music`
-	- mute button
+	- `mute button`
 - `GFX`
 	- `Possible background image`
 	- `Logo? Menu background image`
@@ -36,8 +36,9 @@
 	- `Highlighting bottom right grid tile highlights target for some reason`
 	- `Need to click on the grid again after you've finished`
 	- `Level end check doesn't order blocks correctly`
-	- Animation freak out
-		- No longer freaks out but some layouts still cause weird issues (e.g trying to grow across the board on )
+	- `Animation freak out`
+		- `No longer freaks out but some layouts still cause weird issues (e.g trying to grow across the board on )`
+		- Not perfect but it works
 	- `Try again button hover`
 	- `Par is awlays zero at the end`
 	- `4x4 grids don't finish`

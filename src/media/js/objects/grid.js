@@ -4,7 +4,6 @@ define(function(require) {
 	var helpers = require("../utils/helpers");
 	var Block = require("./block");
 	var Animation = require("./animation");
-	var Link = require("./link");
 
 	function addOrRemoveBlock(active, block) {
 		if(block.active) {
@@ -56,7 +55,7 @@ define(function(require) {
 
 	Grid.prototype.getSequence = function() {
 		var areas = [];
-b=this.blocks
+
 		for(var key in this.blocks) {
 			this.blocks[key].areas.forEach(function(area) {
 				var centroid = area.centroid();
@@ -76,7 +75,7 @@ b=this.blocks
 			
 			return a.y > b.y ? 1 : -1;
 		});
-a=areas;
+
 		areas = areas.map(function(a) {
 			return a.colour;
 		});
@@ -136,13 +135,8 @@ a=areas;
 			if(headAdjacent.length > 0 && tailAdjacent.length > 0) {
 				toPlay = this.sfx.goodlink;
 
-				//console.log("START ANIMATION")
-				//console.log("headAdjacent.length = " + headAdjacent.length)
-				//console.log("tailAdjacent.length = " + tailAdjacent.length)
-
 				// head is bigger than tail so merge head into tail rather than tail into head
 				if(head.areas.length > tail.areas.length) {
-					//console.log("switch")
 					var tmp = headAdjacent;
 
 					headAdjacent = tailAdjacent;
@@ -197,70 +191,5 @@ a=areas;
 		this.animation.animate(elapsed);
 	};
 
-	// TODO destroy
-
 	return Grid;
 });
-
-
-
-function debugLinks(linked) {
-	console.log("LINKS")
-	linked.forEach(function(l) {
-		l.links.forEach(function(b) {
-			console.log(debugBlock(b))
-		})
-	});
-	console.log("--")
-}
-
-function debugBlocks(blocks) {
-	console.log("BLOCKS")
-	var a = []
-
-	for(var k in blocks) {
-		a.push(debugBlock(blocks[k]))
-	}
-
-	console.log(a)
-	console.log("--")
-}
-
-function debugBlock(block) {
-	var c = "";
-
-	if(block.colour == "#ff0000")
-		c = "RED"
-	else if(block.colour == "#35b23b")
-		c = "GREEN"
-	else if(block.colour == "#539fed")
-		c = "BLUE"
-
-	var areas = [];
-
-	block.areas.forEach(function(a) {
-		areas.push({
-			x: a.x,
-			y: a.y,
-			width: a.width,
-			height: a.height
-		});
-	});
-
-	return {
-		key: block.__key,
-		areas: areas,
-		colour: c
-	};
-}
-
-function debugRect(rect) {
-	var r = {
-		x: rect.x,
-		y: rect.y,
-		width: rect.width,
-		height: rect.height
-	};
-
-	console.log(r)
-}

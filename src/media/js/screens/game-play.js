@@ -16,10 +16,14 @@ define(function(require) {
 	GamePlay.prototype.create = function() {
 		this.game.add.image(0, 0, "background");
 
+		var textX = constants.PLAY_AREA_SIZE + constants.PAD + constants.PAD_HALF;
 		var sidebar = helpers.createSolid(this.game, 200 - constants.PAD, 600 - constants.PAD, "rgba(50,50,50,0.7)");
 
 		this.game.add.image(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.PAD_HALF, sidebar);
 		this.game.add.button(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.INFO_HEIGHT - constants.SEQUENCE_HEIGHT - constants.PAD * 3, "retry", this.restartLevel, this, 1, 0, 2, 0);
+
+		this.game.add.button(constants.PLAY_AREA_SIZE + constants.PAD_HALF, constants.INFO_HEIGHT - constants.SEQUENCE_HEIGHT - constants.PAD * 4.5 - 10, "mute", this.toggleAudio, this)
+		this.muteText = this.game.add.text(textX + 20, constants.INFO_HEIGHT - constants.SEQUENCE_HEIGHT - constants.PAD * 4.5 - 5, "Music: On", constants.STYLES.BODY);
 
 		this.score = {
 			moves: 0,
@@ -45,8 +49,6 @@ define(function(require) {
 
 		this.mouseDown = false;
 
-		var textX = constants.PLAY_AREA_SIZE + constants.PAD + constants.PAD_HALF;
-
 		this.staticText = {
 			level:    this.game.add.text(textX, constants.INFO_WIDTH + constants.PAD * 2,                              constants.TEXT.LEVEL, constants.STYLES.HUD),
 			levelPar: this.game.add.text(textX, constants.INFO_WIDTH + constants.PAD * 2 + constants.TEXT_PADDING,     constants.TEXT.PAR,   constants.STYLES.HUD),
@@ -69,6 +71,17 @@ define(function(require) {
 
 		// TODO show some sort of indicator if they're different colours
 		// TODO touch input events
+	};
+
+	GamePlay.prototype.toggleAudio = function() {
+		if(this.game.music.isPlaying) {
+			this.muteText.text = "Music: Off";
+			this.game.music.stop();
+		}
+		else {
+			this.muteText.text = "Music: On";
+			this.game.music.play();
+		}
 	};
 
 	GamePlay.prototype.nextLevel = function() {

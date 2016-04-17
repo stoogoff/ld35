@@ -64,44 +64,6 @@ define(function(require) {
 		}
 	};
 
-	/*var TopLeftAnimation = function(obj, targetX, targetY) {
-		return function(elapsed) {
-			var speed = constants.SPEED * elapsed;
-
-			obj.x -= speed;
-			obj.y -= speed;
-			obj.width += speed;
-			obj.height += speed;
-
-			if(parseInt(obj.x, 10) < targetX && parseInt(obj.y, 10) < targetY) {
-				obj.x = targetX;
-				obj.y = targetY;
-
-				return false;
-			}
-
-			return true;
-		}
-	};
-
-	var BottomRightAnimation = function(obj, targetX, targetY) {
-		return function(elapsed) {
-			var speed = constants.SPEED * elapsed;
-
-			obj.width += speed;
-			obj.height += speed;
-
-			if(parseInt(obj.x, 10) < targetX && parseInt(obj.y, 10) < targetY) {
-				obj.width = targetX = obj.x;
-				obj.height = targetY - obj.y;
-
-				return false;
-			}
-
-			return true;
-		}
-	};*/
-
 	var GroupAnimation = function(animations) {
 		return function(elapsed) {
 			var more = 0;
@@ -120,28 +82,27 @@ define(function(require) {
 		this.active = true;
 		this.onComplete = complete || function() {};
 
-		// one block surrounds the other on two sides
 		if(from.length > 1 && to.length > 1) {
-			var targetX = Math.min(to[0].initial.x + to[0].initial.width, to[1].initial.x + to[1].initial.width);
-			var targetY = Math.min(to[0].initial.y + to[0].initial.height, to[1].initial.y + to[1].initial.height);
-
 			from = from[0];
 
 			var animations = [];
 
-			if(from.x < targetX) {
-				animations.push(WidthAnimation(from, targetX));
-			}
-			else if(from.x > targetX) {
-				animations.push(LeftAnimation(from, targetX));
-			}
-
-			if(from.y < targetY) {
-				animations.push(HeightAnimation(from, targetY));
-			}
-			else if(from.y > targetY) {
-				animations.push(TopAnimation(from, targetY));
-			}
+			to.forEach(function(target) {
+				if(from.initial.y < target.initial.y) {
+					animations.push(HeightAnimation(from, target.initial.y));
+				}
+				else if(from.initial.y > target.initial.y) {
+					animations.push(TopAnimation(from, target.initial.y + target.initial.height))
+				}
+				else {
+					if(from.initial.x < target.initial.x) {
+						animations.push(WidthAnimation(from, target.initial.x));
+					}
+					else {
+						animations.push(LeftAnimation(from, target.initial.x + target.initial.width));
+					}
+				}
+			});
 
 			this.animation = GroupAnimation(animations);
 		}
